@@ -2,6 +2,7 @@
 #define _QUICK_SORTS_
 
 #include "Registro.hpp"
+#include "Pilha.hpp"
 
 class QuickSorts{
 
@@ -13,7 +14,7 @@ class QuickSorts{
         void quickSortNaoRecursivoInteligente(Registro * vetor, int esquerda, int direita);
 
     private:
-        void Particao(int esquerda, int direita, int *i, int *j); 
+        void Particao(Registro * vetor, int esquerda, int direita, int *i, int *j); 
 
 };
 

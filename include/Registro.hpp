@@ -4,12 +4,13 @@
 class Registro{
     private:
         int chave;
-        char cadeia[15][200];
-        double numerosReais[10];
+        char ** cadeia;
+        double *numerosReais;
     
     public:
         int getChave(){ return chave;}
-        Registro(int chave, char cadeia[][], int numerosReais[]);
+        void setChave(int chave){ this->chave = chave;}
+        void setRegistro(int chave, char ** cadeia, double * numerosReais);
 };
 
 #endif

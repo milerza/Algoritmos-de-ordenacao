@@ -1,7 +1,7 @@
 #include "Registro.hpp"
 
-Registro::Registro(int chave, char cadeia[][], int numerosReais[]){
+void Registro::setRegistro(int chave, char ** cadeia, double * numerosReais){
     this->chave = chave;
     this->cadeia = cadeia;
-    this->numeros = numerosReais;
+    this->numerosReais = numerosReais;
 }
