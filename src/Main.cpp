@@ -1,5 +1,6 @@
 #include "QuickSorts.hpp"
 #include <iostream>
+#include <string>
 
 /* int GerarChaveAleatoria(int N){
 
@@ -11,6 +12,31 @@ void ImprimirVetor(Registro * registro, int n){
 }
 
 int main(int argc, char* argv[]) {
+    char versao;
+    int tamanho;
+    std::string caminhoEntrada;
+    std::string caminhoSaida;
+
+
+    for (int i = 0; i < argc; i++){
+        if (std::string(argv[i]) == "-v"){
+            versao = *argv[i + 1];
+            std::cout << versao <<std::endl;
+        } else if (std::string(argv[i]) == "-s"){
+            tamanho = *argv[i + 1] - '0';
+            std::cout << versao <<std::endl;
+
+        } else if (std::string(argv[i]) == "-i"){
+            caminhoEntrada = std::string(argv[i + 1]);
+            std::cout << versao <<std::endl;
+
+        } else if (std::string(argv[i]) == "-o"){
+            caminhoSaida = std::string(argv[i + 1]);
+            std::cout << versao <<std::endl;
+
+        }
+    }
+
     QuickSorts quicksorts;
     double * numerosReais = new double[10];
     int m = 15;
