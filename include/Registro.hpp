@@ -1,4 +1,4 @@
-#ifndef _REGISTRO_
+ #ifndef _REGISTRO_
 #define _REGISTRO_
 
 class Registro{
