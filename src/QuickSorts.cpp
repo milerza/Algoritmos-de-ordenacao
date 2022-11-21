@@ -37,8 +37,7 @@ void QuickSorts::quickSortRecursivo(Registro *vetor, int esquerda, int direita){
         quickSortRecursivo(vetor, i, direita);
 }
 
-void QuickSorts::quickSortMediana(Registro *vetor, int esquerda, int direita, int k)
-{
+void QuickSorts::quickSortMediana(Registro *vetor, int esquerda, int direita, int k){
     int i , j;
     Registro aux;
 
@@ -82,6 +81,46 @@ void QuickSorts::quickSortSelecao(Registro *vetor, int esquerda, int direita, in
 }
 
 void QuickSorts::quickSortNaoRecursivo(Registro *vetor, int n)
+{
+    PilhaEncadeada * pilha;
+    TipoItem item;
+    // campos esq e dir
+    int esq, dir, i, j;
+
+    pilha = new PilhaEncadeada();
+
+    esq = 0;
+    dir = n-1;
+    item.direita = dir;
+    item.esquerda = esq;
+
+    pilha->Empilha(item);
+
+    do{
+        if (dir > esq) {
+            Particao(vetor, esq, dir, &i, &j);
+            if ((j-esq)>(dir-i)) {
+                item.direita = j;
+                item.esquerda = esq;
+                pilha->Empilha(item);
+                esq = i;
+            }
+            else {
+                item.direita = i;
+                item.esquerda = dir;
+                pilha->Empilha(item);
+                dir = j;
+            }
+        }
+        else {
+            pilha->Desempilha();
+            dir = item.direita;
+            esq = item.esquerda;
+        }
+    } while (!pilha->Vazia());
+}
+
+void QuickSorts::quickSortNaoRecursivoInteligente(Registro *vetor, int n)
 {
     PilhaEncadeada * pilha;
     TipoItem item;
