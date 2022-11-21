@@ -3,6 +3,21 @@
 
 #include "Registro.hpp"
 
+class TipoItem{
+    public:
+        int esquerda, direita;
+};
+
+class TipoCelula
+{
+    public:
+        TipoCelula();
+    private:
+        TipoItem item;
+        TipoCelula *prox;
+        friend class PilhaEncadeada;
+};
+
 class Pilha
 {
     public:
@@ -25,24 +40,8 @@ class PilhaEncadeada : public Pilha
         TipoItem Desempilha();
         void Limpa();
     private:
-        
+        TipoCelula* topo;
 };
 
-class TipoCelula
-{
-    public:
-        TipoCelula();
-    private:
-        TipoItem item;
-        TipoCelula *prox;
-        friend class PilhaEncadeada;
-};
 
-class TipoItem{
-    public:
-        TipoItem();
-        void Imprime();
-        int esquerda, direita;
-};
-
-#endif;
+#endif

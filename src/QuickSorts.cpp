@@ -3,57 +3,8 @@
 #include <cstdlib>
 
 
-void QuickSorts::Particao(Registro * vetor, int esquerda, int direita, int *i, int *j){
-    *i = esquerda;
-    *j = direita;
 
-    int pivo = vetor[(*i + *j) / 2].getChave();
-    Registro aux;
-
-    while (*i <= *j)
-    {
-        while (vetor[*i].getChave() < pivo)
-            (*i)++;
-        while (vetor[*j].getChave() > pivo)
-            (*j)--;
-        if (*i <= *j)
-        {
-            aux = vetor[*i];
-            vetor[*i] = vetor[*j];
-            vetor[*j] = aux;
-            (*i++);
-            (*j--);
-        }
-    }
-}
-
-int QuickSorts::escolherPivor(Registro *vetor, int k, int esquerda, int direita){
-    Registro * aux;
-    int posicao;
-
-    if(k == 0)
-        throw "Valor de k invalido";
-
-    //procurando valores aleatórios no intervalo definido por direita e esquerda
-    for(int i = 0; i < k; i++){ 
-        //calculando o valor aleatorio entre o valor esquerda e o valor direita passados como paramentros
-        posicao =  esquerda + (rand() % (direita - esquerda + 1));
-        aux[i] = vetor[posicao];
-    }
-
-    //ordena o vetor aux
-    quickSortRecursivo(aux, 0, k);
-
-    if(k%2 == 0){ 
-        return aux[k/2].getChave(); //mediana caso o vetor aux tenha tamanho par
-    } 
-    else{
-        return aux[(k+1)/2].getChave(); //mediana caso o vetor aux tenha tamanho impar
-    }
-}
-
-void QuickSorts::quickSortRecursivo(Registro *vetor, int esquerda, int direita)
-{
+void QuickSorts::quickSortRecursivo(Registro *vetor, int esquerda, int direita){
     int i , j;
 
     this->Particao(vetor, esquerda, direita, &i, &j);
@@ -97,8 +48,15 @@ void QuickSorts::quickSortMediana(Registro *vetor, int esquerda, int direita, in
         quickSortRecursivo(vetor, i, direita);
 }
 
-void QuickSorts::quickSortSelecao(Registro *vetor, int esquerda, int direita)
-{
+void QuickSorts::quickSortSelecao(Registro *vetor, int esquerda, int direita, int m){
+    int i , j;
+
+    this->ParticaoSelecao(vetor, esquerda, direita, &i, &j, m);
+
+    if (j > esquerda)
+        quickSortRecursivo(vetor, esquerda, j);
+    if (i < direita)
+        quickSortRecursivo(vetor, i, direita);
 }
 
 void QuickSorts::quickSortNaoRecursivo(Registro *vetor, int n)
@@ -141,4 +99,89 @@ void QuickSorts::quickSortNaoRecursivo(Registro *vetor, int n)
     } while (!pilha->Vazia());
 }
 
- 
+void QuickSorts::Particao(Registro * vetor, int esquerda, int direita, int *i, int *j){
+    *i = esquerda;
+    *j = direita;
+
+    int pivo = vetor[(*i + *j) / 2].getChave();
+    Registro aux;
+
+    while (*i <= *j)
+    {
+        while (vetor[*i].getChave() < pivo)
+            (*i)++;
+        while (vetor[*j].getChave() > pivo)
+            (*j)--;
+        if (*i <= *j)
+        {
+            aux = vetor[*i];
+            vetor[*i] = vetor[*j];
+            vetor[*j] = aux;
+            (*i++);
+            (*j--);
+        }
+    }
+}
+
+int QuickSorts::escolherPivor(Registro *vetor, int k, int esquerda, int direita){
+    Registro * aux = new Registro[k];
+    int posicao;
+
+    if(k == 0)
+        throw "Valor de k invalido";
+
+    //procurando valores aleatórios no intervalo definido por direita e esquerda
+    for(int i = 0; i < k; i++){ 
+        //calculando o valor aleatorio entre o valor esquerda e o valor direita passados como paramentros
+        posicao =  esquerda + (rand() % (direita - esquerda + 1));
+        aux[i] = vetor[posicao];
+    }
+
+    //ordena o vetor aux
+    quickSortRecursivo(aux, 0, k);
+
+    if(k%2 == 0){ 
+        return aux[k/2].getChave(); //mediana caso o vetor aux tenha tamanho par
+    } 
+    else{
+        return aux[(k+1)/2].getChave(); //mediana caso o vetor aux tenha tamanho impar
+    }
+}
+
+
+void QuickSorts::Selecao(Registro * vetor,  int n){
+    int i, j, min;
+    Registro aux;
+
+    for (i = 0; i < n - 1; i++){
+        min = i;
+
+        for (j = i + 1 ; j < n; j++){
+            if (vetor[j].getChave() < vetor[min].getChave())
+                min = j;
+        }
+
+        aux = vetor[i];
+        vetor[i] = vetor[min];
+        vetor[min] = aux;
+    }
+}
+
+void QuickSorts::ParticaoSelecao(Registro * vetor, int esquerda, int direita, int *i, int *j, int m){
+    *i = esquerda;
+    *j = direita;
+
+    int pivo = vetor[(*i + *j) / 2].getChave();
+
+    while ((*j - *i) <= m)
+    {
+        while (vetor[*i].getChave() < pivo)
+            (*i)++;
+        while (vetor[*j].getChave() > pivo)
+            (*j)--;
+        if ( (*j - *i) <= m)
+        {
+            Selecao(vetor, (*j - *i));
+        }
+    }
+}
