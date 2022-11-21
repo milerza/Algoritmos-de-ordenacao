@@ -1,7 +1,6 @@
 #include "Pilha.hpp"
 
 TipoCelula::TipoCelula(){
-    item.setChave(-1);
     prox = nullptr;
 }
 
@@ -24,7 +23,7 @@ void PilhaEncadeada::Empilha(TipoItem item){
 };
 
 TipoItem PilhaEncadeada::Desempilha(){
-    Registro aux;
+    TipoItem aux;
     TipoCelula *p;
 
     if(tamanho == 0)
