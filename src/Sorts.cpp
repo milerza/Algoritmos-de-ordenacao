@@ -66,3 +66,44 @@ void Sorts::mergeSort(Registro * vetor, int const inicio, int const fim){
     //junta
     merge(vetor, inicio, meio, fim);
 }
+
+void Sorts::heapify(Registro * vetor, int N, int i){
+    
+    int maior = i; //raiz
+    int esquerda = 2 * i + 1;
+    int direita = 2 * i + 2;
+ 
+    // se a folha da esquerda é maior que que maior
+    if (esquerda < N && vetor[esquerda].getChave() > vetor[maior].getChave())
+ 
+        maior = esquerda;
+ 
+    // se a folha da esquerda é maior que que maior
+    if (direita < N && vetor[direita].getChave() > vetor[maior].getChave())
+ 
+        maior = direita;
+ 
+    // troca e continua a função se a raiz não é maior
+    if (maior != i) {
+        Registro aux = vetor[i];
+        vetor[i] = vetor[maior];
+        vetor[maior] = aux;
+ 
+        // executa recursivamento o metodo na subarvore
+        heapify(vetor, N, maior);
+    }
+}
+
+void Sorts::heapSort(Registro * vetor, int N){
+    for (int i = N / 2 - 1; i >= 0; i--)
+        heapify(vetor, N, i);
+ 
+    // Heap sort
+    for (int i = N - 1; i >= 0; i--) {
+        Registro aux = vetor[0];
+        vetor[0] = vetor[i];
+        vetor[i] = aux;
+
+        heapify(vetor, i, 0);
+    }
+}

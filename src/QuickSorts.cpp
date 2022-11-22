@@ -1,6 +1,9 @@
 #include "QuickSorts.hpp"
 
 #include <cstdlib>
+#include <string>
+#include <iostream>
+
 
 extern "C"{
     #include <msgassert.h>
@@ -54,13 +57,23 @@ void QuickSorts::quickSortRecursivo(Registro *vetor, int esquerda, int direita){
 
 void QuickSorts::quickSortMediana(Registro *vetor, int esquerda, int direita, int k){
     int i , j;
+    int pivo;
     Registro aux;
 
     i = esquerda;
     j = direita;
 
-    int pivo = this->escolherPivor(vetor, k, esquerda, direita);
+    pivo = vetor[(i + j) / 2].getChave(); //caso não consiga achar o pivor mediana, usa esse
+
+    try {
+        pivo = this->escolherPivor(vetor, k, esquerda, direita);
+    }
+    catch(std::string ex) {
+        std::cout << "valor de k inválido" << '\n';
+    }
     
+    leMemLog((long int)((vetor[(i + j) / 2].getChave())), sizeof(long int), 0);
+
     while (i <= j)
     {
         while (vetor[i].getChave() < pivo)
@@ -80,9 +93,9 @@ void QuickSorts::quickSortMediana(Registro *vetor, int esquerda, int direita, in
     }
 
     if (j > esquerda)
-        quickSortRecursivo(vetor, esquerda, j);
+        quickSortMediana(vetor, esquerda, j, k);
     if (i < direita)
-        quickSortRecursivo(vetor, i, direita);
+        quickSortMediana(vetor, i, direita, k);
 }
 
 void QuickSorts::quickSortSelecao(Registro *vetor, int esquerda, int direita, int m){
@@ -191,7 +204,7 @@ int QuickSorts::escolherPivor(Registro *vetor, int k, int esquerda, int direita)
     }
 
     //ordena o vetor aux
-    quickSortRecursivo(aux, 0, k);
+    this->Selecao(aux, k);
 
     if(k%2 == 0){ 
         return aux[k/2].getChave(); //mediana caso o vetor aux tenha tamanho par

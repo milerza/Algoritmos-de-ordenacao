@@ -99,13 +99,14 @@ void ChamarQuickSort(int * valores, int quantidadeValores, int versao, int semen
             sorts.mergeSort(listaRegistros, 0, valores[i]-1);
         }
         else if(versao == 7){
-
+            sorts.heapSort(listaRegistros, valores[i]);
         }
         else{
         avisoAssert(versao >= 1 || versao<= 5, "Versão QuickSort não especificada!");
         } 
 
-        Imprimir(listaRegistros, valores[i]);
+        //----imprime os vetores ordenados
+        //Imprimir(listaRegistros, valores[i]);
         delete(listaRegistros);
 
         // ---------------------------------------------------------------------------------------
