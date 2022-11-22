@@ -1,4 +1,5 @@
 #include "QuickSorts.hpp"
+#include "Sorts.hpp"
 
 #include <iostream>
 #include <string>
@@ -23,6 +24,7 @@ void Imprimir(Registro * registro, int n){
 
 void ChamarQuickSort(int * valores, int quantidadeValores, int versao, int semente, int kMediana = 3, int mSelecao = 3){
     QuickSorts quicksorts;
+    Sorts sorts;
     int chave;
     std::string caminhoSaida;
 
@@ -92,9 +94,16 @@ void ChamarQuickSort(int * valores, int quantidadeValores, int versao, int semen
         }
         else if(versao == 5){
             quicksorts.quickSortNaoRecursivo(listaRegistros, valores[i]);
-        } else{
-        avisoAssert(versao >= 1 || versao<= 5, "Versão QuickSort não especificada!");
+        } 
+        else if(versao == 6){
+            sorts.mergeSort(listaRegistros, 0, valores[i]-1);
         }
+        else if(versao == 7){
+
+        }
+        else{
+        avisoAssert(versao >= 1 || versao<= 5, "Versão QuickSort não especificada!");
+        } 
 
         Imprimir(listaRegistros, valores[i]);
         delete(listaRegistros);
@@ -116,6 +125,7 @@ void ChamarQuickSort(int * valores, int quantidadeValores, int versao, int semen
     }
     
 }
+
 
 int *LerArquivo(std::string arquivoEntrada, int * N){
     

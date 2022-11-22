@@ -1,51 +1,68 @@
-/*#include "Sorts.hpp"
+#include "Sorts.hpp"
 
 
-int *Sorts::merge(int *valuesL, int *valuesR, int nl, int nr) {
-    int *result = (int *)
+void Sorts::merge(Registro * vetor, int const esquerda, int const meio, int const direita){
+    int const subVetorUm = meio - esquerda + 1;
+    int const subVetorDois = direita - meio;
 
-    malloc((nl+nr) * sizeof(int));
+    int idSubVetorUm, idSubVetorDois, idJuntadoVetor; //inicia variaveis
+ 
+    //criando vetores auxiliar
+    Registro *esquerdaVetor = new Registro[subVetorUm];
+    Registro *direitaVetor = new Registro[subVetorDois];
+ 
+    // Dividindo vetores
+    for (int i = 0; i < subVetorUm; i++)
+        esquerdaVetor[i] = vetor[esquerda + i];
 
-    int i = 0;
-    int j = 0;
-    int k = 0;
-
-    while (i < nl && j < nr) {
-        if (valuesL[i] < valuesR[j]) {
-            result[k] = valuesL[i];
-            i++;
-        } 
+    for (int j = 0; j < subVetorDois; j++)
+        direitaVetor[j] = vetor[meio + 1 + j];
+    
+    //atribuindo indexes dos vetores
+    idSubVetorUm = 0; 
+    idSubVetorDois = 0; 
+    idJuntadoVetor = esquerda;  
+    
+    // ordena e junta novamente os vetores
+    while (idSubVetorUm < subVetorUm && idSubVetorDois < subVetorDois) {
+        if (esquerdaVetor[idSubVetorUm].getChave() <= direitaVetor[idSubVetorDois].getChave()) {
+            vetor[idJuntadoVetor] = esquerdaVetor[idSubVetorUm];
+            idSubVetorUm++;
+        }
         else {
-            result[k] = valuesR[j];
-            j++;
+            vetor[idJuntadoVetor] = direitaVetor[idSubVetorDois];
+            idSubVetorDois++;
         }
-        k++;
+        idJuntadoVetor++;
     }
-    if (k < nl + nr) {
-        for(; i < nl; i++) {
-            result[k] = valuesL[i];
-            k++;
-        }
-        for(; j < nr; j++) {
-            result[k] = valuesR[j];
-            k++;
-        }
+
+    // Copia os elementos que sobraram da esquerda
+    while (idSubVetorUm < subVetorUm) {
+        vetor[idJuntadoVetor] = esquerdaVetor[idSubVetorUm];
+        idSubVetorUm++;
+        idJuntadoVetor++;
     }
-    return result;
-} 
-   
-void Sorts::mergeSort(Registro * registro, int esquerda, int direita) 
-{ 
-    if (esquerda < direita) { 
-        //Dividindo o vetor
-        int meio = esquerda + (direita - esquerda) / 2; 
 
-        mergeSort(registro, esquerda, meio); 
-        mergeSort(registro, meio + 1, direita); 
+    // Copia os elementos que sobraram da direita
+    while (idSubVetorDois < subVetorDois) {
+        vetor[idJuntadoVetor] = direitaVetor[idSubVetorDois];
+        idSubVetorDois++;
+        idJuntadoVetor++;
+    }
 
-        //combinando
-        merge(registro, esquerda, meio, direita); 
-    } 
-} 
+    delete[] esquerdaVetor;
+    delete[] direitaVetor;
+}
 
-*/
+void Sorts::mergeSort(Registro * vetor, int const inicio, int const fim){
+    if (inicio >= fim)
+        return; //condicao de parada
+ 
+    int meio = inicio + (fim - inicio) / 2;
+    //divide
+    mergeSort(vetor, inicio, meio);
+    mergeSort(vetor, meio + 1, fim);
+
+    //junta
+    merge(vetor, inicio, meio, fim);
+}

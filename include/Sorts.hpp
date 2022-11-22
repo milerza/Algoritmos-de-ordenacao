@@ -1,11 +1,13 @@
-/* #ifndef _PILHA_
-#define _PILHA_
+#ifndef _SORTS_
+#define _SORTS_
 
 #include "Registro.hpp"
 
 class Sorts{
-    void mergeSort(Registro * registro, int esquerda, int direita);
-    void merge(Registro *valuesL, Registro *valuesR, int nl, int nr);
+    public:
+        void merge(Registro * vetor, int const esquerda, int const meio, int const direita);
+        void mergeSort(Registro * vetor, int const inicio, int const fim);
 };
 
-#endif; */
+
+#endif
