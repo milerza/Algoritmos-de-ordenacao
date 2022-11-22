@@ -2,6 +2,14 @@
 
 #include <cstdlib>
 
+extern "C"{
+    #include <msgassert.h>
+    #include <memlog.h>
+    #include <sys/time.h>
+    #include <sys/resource.h>
+}
+
+
 void QuickSorts::Particao(Registro * vetor, int esquerda, int direita, int *i, int *j){
     *i = esquerda;
     *j = direita;
@@ -29,18 +37,23 @@ void QuickSorts::Particao(Registro * vetor, int esquerda, int direita, int *i, i
 void QuickSorts::quickSortRecursivo(Registro *vetor, int esquerda, int direita){
     int i , j;
 
+    //leMemLog((long int)((vetor[(i + j) / 2].getChave())), sizeof(long int), 0);
+
     this->Particao(vetor, esquerda, direita, &i, &j);
 
-    if (j > esquerda)
+    if (j > esquerda){
+        //leMemLog((long int)((vetor[ j].getChave())), sizeof(long int), 0);
         quickSortRecursivo(vetor, esquerda, j);
-    if (i < direita)
+    }
+    if (i < direita){
+        //leMemLog((long int)((vetor[i].getChave())), sizeof(long int), 0);
         quickSortRecursivo(vetor, i, direita);
+    }
 }
 
 void QuickSorts::quickSortMediana(Registro *vetor, int esquerda, int direita, int k){
     int i , j;
     Registro aux;
-
 
     i = esquerda;
     j = direita;
@@ -50,8 +63,10 @@ void QuickSorts::quickSortMediana(Registro *vetor, int esquerda, int direita, in
     while (i <= j)
     {
         while (vetor[i].getChave() < pivo)
+            //leMemLog((long int)((vetor[i].getChave())), sizeof(long int), 0);
             i++;
         while (vetor[j].getChave() > pivo)
+            //leMemLog((long int)((vetor[j].getChave())), sizeof(long int), 0);
             j--;
         if (i <= j)
         {
@@ -72,6 +87,7 @@ void QuickSorts::quickSortMediana(Registro *vetor, int esquerda, int direita, in
 void QuickSorts::quickSortSelecao(Registro *vetor, int esquerda, int direita, int m){
     int i , j;
 
+    //leMemLog((long int)((vetor[(i + j) / 2].getChave())), sizeof(long int), 0);
     this->ParticaoSelecao(vetor, esquerda, direita, &i, &j, m);
 
     if (j > esquerda)

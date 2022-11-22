@@ -37,10 +37,17 @@ SRC = $(wildcard $(SRC_FOLDER)*.cpp)
 OBJ = $(patsubst $(SRC_FOLDER)%.cpp, $(OBJ_FOLDER)%.o, $(SRC))
 
 $(OBJ_FOLDER)%.o: $(SRC_FOLDER)%.cpp
+	gcc -pg -Wall -c -Iinclude -o ./obj/memlog.o ./src/memlog.c
 	$(CC) $(CXXFLAGS) -c $< -o $@ -I$(INCLUDE_FOLDER)
 
 all: $(OBJ)
-	$(CC) $(CXXFLAGS) -o $(BIN_FOLDER)$(TARGET) $(OBJ)
+	$(CC) $(CXXFLAGS) -o $(BIN_FOLDER)$(TARGET) ./obj/memlog.o $(OBJ) 
+
+run:
+	@$(BIN_FOLDER)$(TARGET)
+	@./geragrafico.sh
 
 clean:
 	@rm -rf $(OBJ_FOLDER)* $(BIN_FOLDER)*
+
+
