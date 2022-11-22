@@ -15,6 +15,9 @@ void QuickSorts::Particao(Registro * vetor, int esquerda, int direita, int *i, i
     *j = direita;
 
     int pivo = vetor[(*i + *j) / 2].getChave();
+
+    leMemLog((long int)((vetor[(*i + *j) / 2].getChave())), sizeof(long int), 0);
+
     Registro aux;
 
     while (*i <= *j)
@@ -36,8 +39,6 @@ void QuickSorts::Particao(Registro * vetor, int esquerda, int direita, int *i, i
 
 void QuickSorts::quickSortRecursivo(Registro *vetor, int esquerda, int direita){
     int i , j;
-
-    //leMemLog((long int)((vetor[(i + j) / 2].getChave())), sizeof(long int), 0);
 
     this->Particao(vetor, esquerda, direita, &i, &j);
 
@@ -87,7 +88,6 @@ void QuickSorts::quickSortMediana(Registro *vetor, int esquerda, int direita, in
 void QuickSorts::quickSortSelecao(Registro *vetor, int esquerda, int direita, int m){
     int i , j;
 
-    //leMemLog((long int)((vetor[(i + j) / 2].getChave())), sizeof(long int), 0);
     this->ParticaoSelecao(vetor, esquerda, direita, &i, &j, m);
 
     if (j > esquerda)

@@ -74,7 +74,9 @@ void ChamarQuickSort(int * valores, int quantidadeValores, int versao, int semen
         start_user = usage.ru_utime;
         start_system = usage.ru_stime;
         
-        leMemLog((long int)((listaRegistros[valores[i]].getChave())), sizeof(long int), 0);
+        leMemLog((long int)((&listaRegistros[valores[i]])), sizeof(long int), 0);
+        escreveMemLog((long int)((listaRegistros[valores[i]].getChave())), sizeof(long int), 0);
+
 
         if(versao == 1){
             quicksorts.quickSortRecursivo(listaRegistros, 0, valores[i] - 1);
@@ -202,6 +204,8 @@ int main(int argc, char* argv[]) {
     valores = LerArquivo(caminhoEntrada, &tamanhoValores);
 
     ChamarQuickSort(valores, tamanhoValores, versao, semente, kMediana, mSelecao);
+    
+    finalizaMemLog();
 
     return 0;
 }
