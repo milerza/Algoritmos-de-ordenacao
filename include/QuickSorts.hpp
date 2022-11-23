@@ -5,6 +5,8 @@
 #include "Pilha.hpp"
 
 class QuickSorts{
+    public:
+        int comparacoes;
 
     public:
         void quickSortRecursivo(Registro * vetor, int esquerda, int direita);
@@ -17,8 +19,6 @@ class QuickSorts{
         void Particao(Registro * vetor, int esquerda, int direita, int *i, int *j); 
         int escolherPivor(Registro *vetor, int k, int esquerda, int direita);
         void Selecao(Registro * vetor,  int n);
-        void ParticaoSelecao(Registro * vetor, int esquerda, int direita, int *i, int *j, int m);
-
 };
 
 #endif

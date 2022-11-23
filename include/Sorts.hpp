@@ -5,6 +5,7 @@
 
 class Sorts{
     public:
+        int comparacoes;
         void mergeSort(Registro * vetor, int const inicio, int const fim);
         void heapSort(Registro * vetor, int N);
     private:

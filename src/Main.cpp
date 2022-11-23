@@ -22,12 +22,15 @@ void Imprimir(Registro * registro, int n){
     std::cout << registro[n-1].getChave() << std::endl;
 }
 
-void ChamarQuickSort(int * valores, int quantidadeValores, int versao, int semente, int kMediana = 3, int mSelecao = 3){
+void ChamarQuickSort(int * valores, int quantidadeValores, int versao, int semente, int kMediana, int mSelecao, std::string saida){
     QuickSorts quicksorts;
     Sorts sorts;
-    int chave;
-    std::string caminhoSaida;
+    int chave, comparacoes;
 
+    std::ofstream inFile;
+
+    inFile.open(saida.c_str());
+    
     // Alocando o vetor de numeros
     float * numerosReais = new float[10]; 
 
@@ -60,6 +63,8 @@ void ChamarQuickSort(int * valores, int quantidadeValores, int versao, int semen
 
     // ---------------------------------------------------------------------------------------
 
+    inFile << std::fixed << "Algoritmo de ordenacao " << versao << std::endl;
+
     for(int i = 0; i< quantidadeValores; i++){
 
         Registro * listaRegistros = new Registro[valores[i]];
@@ -77,32 +82,39 @@ void ChamarQuickSort(int * valores, int quantidadeValores, int versao, int semen
         start_system = usage.ru_stime;
         
         leMemLog((long int)((&listaRegistros[valores[i]])), sizeof(long int), 0);
-        escreveMemLog((long int)((listaRegistros[valores[i]].getChave())), sizeof(long int), 0);
+        escreveMemLog((long int)(&(listaRegistros[valores[i]])), sizeof(long int), 0);
 
 
         if(versao == 1){
             quicksorts.quickSortRecursivo(listaRegistros, 0, valores[i] - 1);
+            comparacoes = quicksorts.comparacoes;
         } 
         else if(versao == 2){
             quicksorts.quickSortMediana(listaRegistros, 0, valores[i] - 1, kMediana);
+            comparacoes = quicksorts.comparacoes;
         }
         else if(versao == 3){
             quicksorts.quickSortSelecao(listaRegistros, 0, valores[i] - 1, kMediana);
+            comparacoes = quicksorts.comparacoes;
         }
         else if(versao == 4){
             quicksorts.quickSortNaoRecursivo(listaRegistros, valores[i]);
+            comparacoes = quicksorts.comparacoes;
         }
         else if(versao == 5){
             quicksorts.quickSortNaoRecursivo(listaRegistros, valores[i]);
+            comparacoes = quicksorts.comparacoes;
         } 
         else if(versao == 6){
             sorts.mergeSort(listaRegistros, 0, valores[i]-1);
+            comparacoes = sorts.comparacoes;
         }
         else if(versao == 7){
             sorts.heapSort(listaRegistros, valores[i]);
+            comparacoes = sorts.comparacoes;
         }
         else{
-        avisoAssert(versao >= 1 || versao<= 5, "Versão QuickSort não especificada!");
+        avisoAssert(versao >= 1 || versao<= 7, "Versão QuickSort não especificada!");
         } 
 
         //----imprime os vetores ordenados
@@ -110,20 +122,21 @@ void ChamarQuickSort(int * valores, int quantidadeValores, int versao, int semen
         delete(listaRegistros);
 
         // ---------------------------------------------------------------------------------------
-    // end reading u_time
-    getrusage(RUSAGE_SELF, &usage);
-    end_user = usage.ru_utime;
-    end_system = usage.ru_stime;
+        // end reading u_time
+        getrusage(RUSAGE_SELF, &usage);
+        end_user = usage.ru_utime;
+        end_system = usage.ru_stime;
 
-    // tv_sec: seconds; tv_usec: microseconds
-    // ru_utime: total amount of time spent executing in usermode,
-    // expressed in a timeval structure (seconds plus microseconds)
-    float utime = (end_user.tv_sec - start_user.tv_sec) + 1e-6 * (end_user.tv_usec - start_user.tv_usec);
-    float stime = (end_system.tv_sec - start_system.tv_sec) + 1e-6 * (end_system.tv_usec - start_system.tv_usec);
-    
-    std::cout << std::fixed << "tempo total: " << utime + stime << std::endl;
-
+        // tv_sec: seconds; tv_usec: microseconds
+        // ru_utime: total amount of time spent executing in usermode,
+        // expressed in a timeval structure (seconds plus microseconds)
+        float utime = (end_user.tv_sec - start_user.tv_sec) + 1e-6 * (end_user.tv_usec - start_user.tv_usec);
+        float stime = (end_system.tv_sec - start_system.tv_sec) + 1e-6 * (end_system.tv_usec - start_system.tv_usec);
+        
+        inFile << std::fixed << "tempo total: " << utime + stime 
+        << "         Número de comparações:" << comparacoes << std::endl;
     }
+    inFile.close();
     
 }
 
@@ -150,19 +163,6 @@ int *LerArquivo(std::string arquivoEntrada, int * N){
     return valores;
 }
 
-void EscreverArquivo(std::string arquivoSaida, int n, Registro *vetor){
-    std::ofstream inFile;
-
-    inFile.open(arquivoSaida.c_str());
-    
-    inFile << "Vetor tamanho: "<< n << std::endl;
-    for(int i = 0; i< n - 1; i++){
-        inFile << vetor[i].getChave() ;
-    }
-        inFile << vetor[n - 1].getChave() << std::endl;
-
-    inFile.close();
-}
 
 int main(int argc, char* argv[]) {
 
@@ -182,7 +182,7 @@ int main(int argc, char* argv[]) {
     int semente, kMediana, mSelecao, tamanhoValores;
     int * valores;
     std::string caminhoEntrada;
-    std::string caminhoSaida;
+    std::string caminhoSaida = "";
     
 
     //------ Lendo valores passados 
@@ -210,10 +210,15 @@ int main(int argc, char* argv[]) {
 
     //------ Verificando versao quick sort
     avisoAssert(versao != 0, "Versão QuickSort não especificada!");
+    
+    if(caminhoSaida == ""){
+        std::cout << "Arquivo de saída não especificado. Saída padrão: out.txt";
+        caminhoSaida = "out.txt";
+    }
 
     valores = LerArquivo(caminhoEntrada, &tamanhoValores);
 
-    ChamarQuickSort(valores, tamanhoValores, versao, semente, kMediana, mSelecao);
+    ChamarQuickSort(valores, tamanhoValores, versao, semente, kMediana, mSelecao, caminhoSaida);
     
     finalizaMemLog();
 

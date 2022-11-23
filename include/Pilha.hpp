@@ -12,10 +12,8 @@ class TipoCelula
 {
     public:
         TipoCelula();
-    private:
-        TipoItem item;
         TipoCelula *prox;
-        friend class PilhaEncadeada;
+        TipoItem item;
 };
 
 class Pilha
@@ -39,7 +37,6 @@ class PilhaEncadeada : public Pilha
         void Empilha(TipoItem item);
         TipoItem Desempilha();
         void Limpa();
-    private:
         TipoCelula* topo;
 };
 

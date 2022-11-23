@@ -16,21 +16,33 @@ extern "C"{
 void QuickSorts::Particao(Registro * vetor, int esquerda, int direita, int *i, int *j){
     *i = esquerda;
     *j = direita;
+    
 
     int pivo = vetor[(*i + *j) / 2].getChave();
 
-    leMemLog((long int)((vetor[(*i + *j) / 2].getChave())), sizeof(long int), 0);
+    leMemLog((long int)(&vetor), sizeof(long int), 0);
 
     Registro aux;
 
     while (*i <= *j)
     {
-        while (vetor[*i].getChave() < pivo)
+        while (vetor[*i].getChave() < pivo){
+            leMemLog((long int)(&(vetor[*i])), sizeof(long int), 0);
+
             (*i)++;
-        while (vetor[*j].getChave() > pivo)
+            comparacoes++;
+        }
+        comparacoes++;
+ 
+        while (vetor[*j].getChave() > pivo){
+            leMemLog((long int)(&(vetor[*j])), sizeof(long int), 0);
             (*j)--;
-        if (*i <= *j)
-        {
+            comparacoes++;
+        }
+        comparacoes++;
+
+        if (*i <= *j){
+            escreveMemLog((long int)(&vetor[*i]), sizeof(long int), 1);
             aux = vetor[*i];
             vetor[*i] = vetor[*j];
             vetor[*j] = aux;
@@ -46,11 +58,11 @@ void QuickSorts::quickSortRecursivo(Registro *vetor, int esquerda, int direita){
     this->Particao(vetor, esquerda, direita, &i, &j);
 
     if (j > esquerda){
-        //leMemLog((long int)((vetor[ j].getChave())), sizeof(long int), 0);
+        leMemLog((long int)(&(vetor[j])), sizeof(long int), 0);
         quickSortRecursivo(vetor, esquerda, j);
     }
     if (i < direita){
-        //leMemLog((long int)((vetor[i].getChave())), sizeof(long int), 0);
+        leMemLog((long int)(&(vetor[i])), sizeof(long int), 0);
         quickSortRecursivo(vetor, i, direita);
     }
 }
@@ -70,20 +82,26 @@ void QuickSorts::quickSortMediana(Registro *vetor, int esquerda, int direita, in
     }
     catch(std::string ex) {
         std::cout << "valor de k inválido" << '\n';
-    }
-    
-    leMemLog((long int)((vetor[(i + j) / 2].getChave())), sizeof(long int), 0);
+    } 
 
     while (i <= j)
     {
-        while (vetor[i].getChave() < pivo)
-            //leMemLog((long int)((vetor[i].getChave())), sizeof(long int), 0);
+        while (vetor[i].getChave() < pivo){
+            leMemLog((long int)(&(vetor[i])), sizeof(long int), 0);
             i++;
-        while (vetor[j].getChave() > pivo)
-            //leMemLog((long int)((vetor[j].getChave())), sizeof(long int), 0);
+            comparacoes++;
+        }
+        comparacoes++;
+
+        while (vetor[j].getChave() > pivo){
+            leMemLog((long int)(&(vetor[j])), sizeof(long int), 0);
             j--;
+            comparacoes++;
+        }
+        comparacoes++;
         if (i <= j)
         {
+            escreveMemLog((long int)(&vetor[i]), sizeof(long int), 1);
             aux = vetor[i];
             vetor[i] = vetor[j];
             vetor[j] = aux;
@@ -101,12 +119,18 @@ void QuickSorts::quickSortMediana(Registro *vetor, int esquerda, int direita, in
 void QuickSorts::quickSortSelecao(Registro *vetor, int esquerda, int direita, int m){
     int i , j;
 
-    this->ParticaoSelecao(vetor, esquerda, direita, &i, &j, m);
+    this->Particao(vetor, esquerda, direita, &i, &j);
 
-    if (j > esquerda)
+    escreveMemLog((long int)(&vetor), sizeof(long int), 0);
+    if(direita - esquerda + 1 <= m){
+        Selecao(vetor, j - i);
+    }
+    else{
+        if (j > esquerda)
         quickSortSelecao(vetor, esquerda, j, m);
-    if (i < direita)
+    if (i < direita )
         quickSortSelecao(vetor, i, direita, m);
+    } 
 }
 
 void QuickSorts::quickSortNaoRecursivo(Registro *vetor, int n)
@@ -120,29 +144,40 @@ void QuickSorts::quickSortNaoRecursivo(Registro *vetor, int n)
 
     esq = 0;
     dir = n-1;
+
     item.direita = dir;
     item.esquerda = esq;
 
     pilha->Empilha(item);
 
     do{
+        dir = pilha->topo->item.direita;
+        esq = pilha->topo->item.esquerda;
+        
         if (dir > esq) {
             Particao(vetor, esq, dir, &i, &j);
-                item.direita = j;
-                item.esquerda = esq;
-                pilha->Empilha(item);
-                esq = i;
+            leMemLog((long int)(&pilha), sizeof(long int), 0);
+            pilha->Desempilha();
+
+            escreveMemLog((long int)(&pilha), sizeof(long int), 0);
+            item.direita = j;
+            item.esquerda = esq;
+            pilha->Empilha(item);
+
+            escreveMemLog((long int)(&pilha), sizeof(long int), 0);
+            item.esquerda = i;
+            item.direita = dir;
+            pilha->Empilha(item);
         }
         else {
             pilha->Desempilha();
-            dir = item.direita;
-            esq = item.esquerda;
         }
     } while (!pilha->Vazia());
+
+    pilha->Limpa();
 }
 
-void QuickSorts::quickSortNaoRecursivoInteligente(Registro *vetor, int n)
-{
+void QuickSorts::quickSortNaoRecursivoInteligente(Registro *vetor, int n){
     PilhaEncadeada * pilha;
     TipoItem item;
     // campos esq e dir
@@ -158,27 +193,44 @@ void QuickSorts::quickSortNaoRecursivoInteligente(Registro *vetor, int n)
     pilha->Empilha(item);
 
     do{
+        dir = pilha->topo->item.direita;
+        esq = pilha->topo->item.esquerda;
+
         if (dir > esq) {
+
             Particao(vetor, esq, dir, &i, &j);
+            leMemLog((long int)(&pilha), sizeof(long int), 0);
+            pilha->Desempilha();
+
             if ((j-esq)>(dir-i)) {
+                escreveMemLog((long int)(&pilha), sizeof(long int), 0);
                 item.direita = j;
                 item.esquerda = esq;
                 pilha->Empilha(item);
-                esq = i;
+
+                escreveMemLog((long int)(&pilha), sizeof(long int), 0);
+                item.esquerda = i;
+                item.direita = dir;
+                pilha->Empilha(item);
             }
             else {
-                item.direita = i;
-                item.esquerda = dir;
+                escreveMemLog((long int)(&pilha), sizeof(long int), 0);
+                item.esquerda = i;
+                item.direita = dir;
                 pilha->Empilha(item);
-                dir = j;
+
+                escreveMemLog((long int)(&pilha), sizeof(long int), 0);
+                item.direita = j;
+                item.esquerda = esq;
+                pilha->Empilha(item);
             }
         }
         else {
             pilha->Desempilha();
-            dir = item.direita;
-            esq = item.esquerda;
         }
     } while (!pilha->Vazia());
+
+    pilha->Limpa();
 }
 
 int QuickSorts::escolherPivor(Registro *vetor, int k, int esquerda, int direita){
@@ -214,33 +266,14 @@ void QuickSorts::Selecao(Registro * vetor,  int n){
         min = i;
 
         for (j = i + 1 ; j < n; j++){
+            comparacoes++;
             if (vetor[j].getChave() < vetor[min].getChave())
                 min = j;
         }
 
+        escreveMemLog((long int)(&vetor[i]), sizeof(long int), 1);
         aux = vetor[i];
         vetor[i] = vetor[min];
         vetor[min] = aux;
-    }
-}
-
-void QuickSorts::ParticaoSelecao(Registro * vetor, int esquerda, int direita, int *i, int *j, int m){
-    *i = esquerda;
-    *j = direita;
-    
-    leMemLog((long int)((vetor[(*i + *j) / 2].getChave())), sizeof(long int), 0);
-
-    int pivo = vetor[(*i + *j) / 2].getChave();
-
-    while ((*j - *i) <= m)
-    {
-        while (vetor[*i].getChave() < pivo)
-            (*i)++;
-        while (vetor[*j].getChave() > pivo)
-            (*j)--;
-        if ( (*j - *i) <= m)
-        {
-            Selecao(vetor, (*j - *i));
-        }
     }
 }
