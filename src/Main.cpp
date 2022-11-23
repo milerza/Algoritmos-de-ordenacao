@@ -127,7 +127,6 @@ void ChamarQuickSort(int * valores, int quantidadeValores, int versao, int semen
     
 }
 
-
 int *LerArquivo(std::string arquivoEntrada, int * N){
     
     std::ifstream inFile;
